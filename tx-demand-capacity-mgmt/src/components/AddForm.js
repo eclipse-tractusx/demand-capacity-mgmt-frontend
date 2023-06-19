@@ -1,86 +1,86 @@
-import { Form, Button } from "react-bootstrap"
+import React, { useContext, useState } from 'react';
+import { Form, Button } from 'react-bootstrap';
 import {DemandContext} from '../contexts/DemandContextProvider';
-import React, {useContext, useEffect, useState} from 'react';
-//import axios from "axios";
 
+const AddForm = () => {
+    const { createDemand } = useContext(DemandContext);
 
-
-const AddForm = () =>{
-
-    const [editor, setEditor] = useState(null);
-    const handleCreatorChange = (event) => {
-        setEditor(event.target.value);
-    }
-
-
-    const [creator, setCreator] = useState(null);
-    const handlePersonChange = (event) => {
-        setCreator(event.target.value);
-    }
-
-    const [persons, setPersons] = useState([]);
-    useEffect(() => {
-
-        handleClick();
-    }, [])
-
-    async function handleClick() {
-      //  const result = await axios.get('/user');
-      //  setPersons(result.data);
-        setPersons(["Pedro"]);
-    }
-
-    const {addTask} = useContext(DemandContext);
-
-    const [newTask, setNewTask] = useState({
-        title:"", status:"", description:"", editor:"", creator:"", day:"",month:"", year:""
-    });
-
-    const onInputChange = (e) => {
-        setNewTask({...newTask,[e.target.name]: e.target.value})
-    }
-
-
-
-    const {title, description}= newTask;
-    const status = 'open';
+    const [description, setDescription] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [requiredValue, setRequiredValue] = useState('');
+    const [deliveredValue, setDeliveredValue] = useState('');
+    const [maximumValue, setMaximumValue] = useState('');
+    const [productId, setProductId] = useState('1');
+    const [projectId, setProjectId] = useState('1');
+    const [demandCategory, setDemandCategory] = useState('');
+    const [companyId, setCompanyId] = useState('1');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const currentDateObj = new Date();
-        if (dateObj.getTime() > currentDateObj.getTime()) {
-            addTask(title, status, description, editor, creator, day,month, year);
+        const newDemand = {
+            startDate,
+            endDate,
+            requiredValue: parseInt(requiredValue),
+            deliveredValue: parseInt(deliveredValue),
+            maximumValue: parseInt(maximumValue),
+            productId,
+            projectId,
+            demandCategory,
+            companyId,
+            description,
+        };
+        createDemand(newDemand);
+        resetForm();
+    };
 
-        } else {
-            window.alert('Invalid Date')
+    const resetForm = () => {
+        setDescription('');
+        setStartDate('');
+        setEndDate('');
+        setRequiredValue('');
+        setDeliveredValue('');
+        setMaximumValue('');
+        setDemandCategory('');
+    };
+
+    const onInputChange = (e) => {
+        const { name, value } = e.target;
+        switch (name) {
+            case 'description':
+                setDescription(value);
+                break;
+            case 'startDate':
+                setStartDate(value);
+                break;
+            case 'endDate':
+                setEndDate(value);
+                break;
+            case 'requiredValue':
+                if (value >= 0) {
+                    setRequiredValue(value);
+                }
+                break;
+            case 'deliveredValue':
+                if (value >= 0) {
+                    setDeliveredValue(value);
+                }
+                break;
+            case 'maximumValue':
+                if (value >= 0) {
+                    setMaximumValue(value);
+                }
+                break;
+            case 'demandCategory':
+                setDemandCategory(value);
+                break;
+            default:
+                break;
         }
-
-       }
-
-    const [date, setDate] = useState("");
-
-    const dateObj = new Date(date);
-    const day = dateObj.getDate();
-    const month = dateObj.getMonth() + 1; // add 1 because getMonth() returns a zero-based index
-    const year = dateObj.getFullYear();
-
-
+    };
 
     return (
-
         <Form onSubmit={handleSubmit}>
-            <p>Title *</p>
-            <Form.Group>
-                <Form.Control
-                    type="text"
-                    placeholder="Title"
-                    name="title"
-                    value={title}
-                    onChange = { (e) => onInputChange(e)}
-                    required
-                />
-            </Form.Group>
-            <p/>
             <p>Description *</p>
             <Form.Group>
                 <Form.Control
@@ -88,56 +88,92 @@ const AddForm = () =>{
                     placeholder="Description"
                     name="description"
                     value={description}
-                    onChange = { (e) => onInputChange(e)}
+                    onChange={onInputChange}
                     required
                 />
             </Form.Group>
-            <p/>
-            <p>Creator *</p>
+            <p />
+            <p>Start Date *</p>
             <Form.Group>
-
-                    <Form.Control as="select" onChange={handlePersonChange}>
-                        <option></option>
-                        {persons.map(option => (
-                            <option key={option.firstname} value={option.firstname}>{option.firstname}</option>
-                        ))}
-
-
-                    </Form.Control>
-            </Form.Group>
-            <p/>
-            <p>Editor *</p>
-            <Form.Group>
-                <Form.Control as="select" onChange={handleCreatorChange}>
-                    <option></option>
-                    {persons.map(option => (
-                        <option key={option.firstname} value={option.firstname}>{option.firstname}</option>
-                    ))}
-
-
-                </Form.Control>
-            </Form.Group>
-            <p/>
-            <p>Expiration date *</p>
-            <Form.Group>
-
                 <Form.Control
                     type="date"
-                    name="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
+                    placeholder="Start Date"
+                    name="startDate"
+                    value={startDate}
+                    pattern="\d{4}-\d{2}-\d{2}"
+                    onChange={onInputChange}
                     required
-
                 />
-
             </Form.Group>
-            <p/>
+            <p />
+            <p>End Date *</p>
+            <Form.Group>
+                <Form.Control
+                    type="date"
+                    placeholder="End Date"
+                    name="endDate"
+                    value={endDate}
+                    onChange={onInputChange}
+                    pattern="\d{4}-\d{2}-\d{2}"
+                    required
+                />
+            </Form.Group>
+            <p />
+            <p>Required Value *</p>
+            <Form.Group>
+                <Form.Control
+                    type="number"
+                    placeholder="Required Value"
+                    name="requiredValue"
+                    value={requiredValue}
+                    onChange={onInputChange}
+                    required
+                />
+            </Form.Group>
+            <p />
+            <p>Delivered Value *</p>
+            <Form.Group>
+                <Form.Control
+                    type="number"
+                    placeholder="Delivered Value"
+                    name="deliveredValue"
+                    value={deliveredValue}
+                    onChange={onInputChange}
+                    required
+                />
+            </Form.Group>
+            <p />
+            <p>Maximum Value *</p>
+            <Form.Group>
+                <Form.Control
+                    type="number"
+                    placeholder="Maximum Value"
+                    name="maximumValue"
+                    value={maximumValue}
+                    onChange={onInputChange}
+                    required
+                />
+            </Form.Group>
+            <p />
+
+            <p>Demand Category *</p>
+            <Form.Group>
+                <Form.Control
+                    type="text"
+                    placeholder="Demand Category"
+                    name="demandCategory"
+                    value={demandCategory}
+                    onChange={onInputChange}
+                    required
+                />
+            </Form.Group>
+            <p />
+
             <Button variant="success" type="submit" block>
-                Add New Task
+                Add New Demand
             </Button>
         </Form>
-
-    )
-}
+    );
+};
 
 export default AddForm;

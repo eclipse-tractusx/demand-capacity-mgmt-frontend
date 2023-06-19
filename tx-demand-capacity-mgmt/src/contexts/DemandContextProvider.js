@@ -23,7 +23,6 @@ const DemandContextProvider = (props) => {
             });
             const result = response.data;
             setDemands(result);
-
         } catch (error) {
             // Handle the error
         }
@@ -36,19 +35,29 @@ const DemandContextProvider = (props) => {
 
     const deleteDemand = (id) => {
         deleteClick(id);
-    }
+    };
 
     async function deleteClick(id) {
         try {
             await api.delete('/demand/' + id);
-            setDemands(prevDemands => prevDemands.filter(demand => demand.id !== id));
+            setDemands((prevDemands) => prevDemands.filter((demand) => demand.id !== id));
         } catch (error) {
             // Handle the error
         }
     }
 
+    const createDemand = async (newDemand) => {
+        try {
+            const response = await api.post('/demand', newDemand);
+            const createdDemand = response.data;
+            setDemands((prevDemands) => [...prevDemands, createdDemand]);
+        } catch (error) {
+            // Handle the error
+        }
+    };
+
     return (
-        <DemandContext.Provider value={{ demands, deleteDemand }}>
+        <DemandContext.Provider value={{ demands, deleteDemand, createDemand }}>
             {props.children}
         </DemandContext.Provider>
     );
