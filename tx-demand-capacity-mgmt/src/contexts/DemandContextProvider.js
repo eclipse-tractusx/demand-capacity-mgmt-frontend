@@ -56,8 +56,22 @@ const DemandContextProvider = (props) => {
         }
     };
 
+    const updateDemand = async (updatedDemand) => {
+        try {
+            console.log(updatedDemand)
+            const response = await api.put(`/demand/${updatedDemand.id}`, updatedDemand);
+
+            const modifiedDemand = response.data;
+            setDemands((prevDemands) =>
+                prevDemands.map((demand) => (demand.id === modifiedDemand.id ? modifiedDemand : demand))
+            );
+        } catch (error) {
+            // Handle the error
+        }
+    };
+
     return (
-        <DemandContext.Provider value={{ demands, deleteDemand, createDemand }}>
+        <DemandContext.Provider value={{ demands, deleteDemand, createDemand, updateDemand }}>
             {props.children}
         </DemandContext.Provider>
     );
