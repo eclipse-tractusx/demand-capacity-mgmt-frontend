@@ -22,7 +22,6 @@ const DemandContextProvider = (props) => {
                 },
             });
             const result = response.data;
-            console.log(result);
             setDemands(result);
 
         } catch (error) {
@@ -35,8 +34,21 @@ const DemandContextProvider = (props) => {
         // Do something with sortedDemands or remove the sorting logic if not needed
     }, [demands]);
 
+    const deleteDemand = (id) => {
+        deleteClick(id);
+    }
+
+    async function deleteClick(id) {
+        try {
+            await api.delete('/demand/' + id);
+            setDemands(prevDemands => prevDemands.filter(demand => demand.id !== id));
+        } catch (error) {
+            // Handle the error
+        }
+    }
+
     return (
-        <DemandContext.Provider value={{ demands }}>
+        <DemandContext.Provider value={{ demands, deleteDemand }}>
             {props.children}
         </DemandContext.Provider>
     );
