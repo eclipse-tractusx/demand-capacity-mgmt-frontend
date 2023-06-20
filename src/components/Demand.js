@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { DemandContext } from '../contexts/DemandContextProvider';
 import { Modal, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import EditForm from './EditForm';
+import EditForm from './EditForm.js';
 
 const Demand = ({ demand }) => {
     const { deleteDemand } = useContext(DemandContext);
