@@ -2,10 +2,17 @@ import { createContext, useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 
 export interface Demand {
-  id: number;
-  name: string;
-  // Add more properties as needed
-}
+    id: number;
+    product: string;
+    companyId: string;
+    requiredValue: number;
+    deliveredValue: number;
+    maximumValue: number;
+    demandCategory: string;
+    description: string;
+    startDate: string;
+    endDate: string;
+  }
 
 interface DemandContextData {
   demands: Demand[];
@@ -42,7 +49,7 @@ const DemandContextProvider: React.FC<React.PropsWithChildren<{}>> = (props) => 
   }, [fetchData]);
 
   useEffect(() => {
-    demands.sort((a, b) => (a.name < b.name ? -1 : 1));
+    demands.sort((a, b) => (a.id < b.id ? -1 : 1));
   }, [demands]);
 
   const deleteDemand = async (id: number) => {
