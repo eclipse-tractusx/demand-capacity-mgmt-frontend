@@ -5,8 +5,8 @@ name: build
 on:
   push:
     branches:
-      - 'dev'
-  workflow_dispatch:
+      - 'DCMFOSS-32'
+  
 
 env:
   IMAGE_NAMESPACE: "tractusx"
