@@ -1,11 +1,11 @@
 # TX-Demand-Capacity-mgmt-Frontend
 
-# Run locally
+## Run locally
 
-Here are three ways to run the application locally on [http://localhost:3000](http://localhost:3000)
+Here are three ways to run the application locally on http://localhost:3000/
 
-# Local build & run
+### Local build & run
 
-### `yarn`
-### `yarn build`
-### `yarn start`
+    yarn
+    yarn build
+    yarn start
