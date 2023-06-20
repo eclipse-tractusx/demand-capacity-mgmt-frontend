@@ -4,7 +4,7 @@ import { Modal, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import EditForm from './EditForm';
 
 const Demand = ({ demand }) => {
-    const { deleteDemand, updateStatus } = useContext(DemandContext);
+    const { deleteDemand } = useContext(DemandContext);
     const [show, setShow] = useState(false);
 
     const handleShow = () => setShow(true);

@@ -10,14 +10,6 @@ const DemandContextProvider = (props) => {
 
     const [demands, setDemands] = useState([]);
 
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    useEffect(() => {
-        demands.sort((a, b) => (a.name < b.name ? -1 : 1));
-    }, [demands]);
-
     const fetchData = async () => {
         try {
             const response = await api.get('/demand', {
@@ -31,6 +23,14 @@ const DemandContextProvider = (props) => {
             // Handle the error
         }
     };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        demands.sort((a, b) => (a.name < b.name ? -1 : 1));
+    }, [demands]);
 
     const deleteDemand = async (id) => {
         try {
