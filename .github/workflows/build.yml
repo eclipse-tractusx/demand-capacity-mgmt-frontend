@@ -28,7 +28,6 @@ jobs:
 
       - name: Build Library and Portal
         run: yarn build
-        
 
       - name: Login to DockerHub
         if: github.event_name != 'pull_request'
