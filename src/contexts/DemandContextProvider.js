@@ -26,7 +26,7 @@ const DemandContextProvider = (props) => {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [fetchData]);
 
     useEffect(() => {
         demands.sort((a, b) => (a.name < b.name ? -1 : 1));
