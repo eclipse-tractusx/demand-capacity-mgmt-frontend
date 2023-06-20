@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 
 export const DemandContext = createContext();
@@ -10,7 +10,7 @@ const DemandContextProvider = (props) => {
 
     const [demands, setDemands] = useState([]);
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const response = await api.get('/demand', {
                 params: {
@@ -22,7 +22,7 @@ const DemandContextProvider = (props) => {
         } catch (error) {
             // Handle the error
         }
-    };
+    }, [api]);
 
     useEffect(() => {
         fetchData();
