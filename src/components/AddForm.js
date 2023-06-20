@@ -11,10 +11,10 @@ const AddForm = () => {
     const [requiredValue, setRequiredValue] = useState('');
     const [deliveredValue, setDeliveredValue] = useState('');
     const [maximumValue, setMaximumValue] = useState('');
-    const [productId, setProductId] = useState('1');
-    const [projectId, setProjectId] = useState('1');
+    const [productId] = useState('1');
+    const [projectId] = useState('1');
     const [demandCategory, setDemandCategory] = useState('');
-    const [companyId, setCompanyId] = useState('1');
+    const [companyId] = useState('1');
 
     const handleSubmit = (e) => {
         e.preventDefault();

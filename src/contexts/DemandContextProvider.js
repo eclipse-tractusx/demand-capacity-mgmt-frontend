@@ -14,7 +14,11 @@ const DemandContextProvider = (props) => {
         fetchData();
     }, []);
 
-    async function fetchData() {
+    useEffect(() => {
+        demands.sort((a, b) => (a.name < b.name ? -1 : 1));
+    }, [demands]);
+
+    const fetchData = async () => {
         try {
             const response = await api.get('/demand', {
                 params: {
@@ -26,25 +30,16 @@ const DemandContextProvider = (props) => {
         } catch (error) {
             // Handle the error
         }
-    }
-
-    useEffect(() => {
-        const sortedDemands = demands.sort((a, b) => (a.name < b.name ? -1 : 1));
-        // Do something with sortedDemands or remove the sorting logic if not needed
-    }, [demands]);
-
-    const deleteDemand = (id) => {
-        deleteClick(id);
     };
 
-    async function deleteClick(id) {
+    const deleteDemand = async (id) => {
         try {
             await api.delete('/demand/' + id);
             setDemands((prevDemands) => prevDemands.filter((demand) => demand.id !== id));
         } catch (error) {
             // Handle the error
         }
-    }
+    };
 
     const createDemand = async (newDemand) => {
         try {
@@ -58,7 +53,7 @@ const DemandContextProvider = (props) => {
 
     const updateDemand = async (updatedDemand) => {
         try {
-            console.log(updatedDemand)
+            console.log(updatedDemand);
             const response = await api.put(`/demand/${updatedDemand.id}`, updatedDemand);
 
             const modifiedDemand = response.data;
