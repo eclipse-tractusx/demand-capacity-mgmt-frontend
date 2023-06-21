@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { DemandContext, Demand } from '../contexts/DemandContextProvider';
 import { Modal, Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import EditForm from './EditForm';
@@ -14,9 +14,7 @@ const DemandComponent: React.FC<DemandProps> = ({ demand }) => {
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
 
-  useEffect(() => {
-    handleClose();
-  }, [demand]);
+ 
 
   const startDate = new Date(demand.startDate);
   const endDate = new Date(demand.endDate);

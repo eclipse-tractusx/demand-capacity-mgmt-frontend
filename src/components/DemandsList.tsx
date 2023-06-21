@@ -1,45 +1,44 @@
-import { useContext, useEffect, useState } from 'react';
-import { Modal, Button, Alert } from 'react-bootstrap';
+import React, { useContext, useState, useMemo, useCallback } from 'react';
+import { Modal, Button } from 'react-bootstrap';
 import { DemandContext } from '../contexts/DemandContextProvider';
-import Demand from './Demand';
+import DemandComponent from './Demand';
 import AddForm from './AddForm';
 import Pagination from './Pagination';
 
 const DemandsList: React.FC = () => {
   const { demands } = useContext(DemandContext)!;
 
-  const [showAlert, setShowAlert] = useState(false);
   const [show, setShow] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [demandsPerPage] = useState(20);
+  const demandsPerPage = 20;
 
-  const handleShow = () => setShow(true);
-  const handleClose = () => setShow(false);
+  const handleShow = useCallback(() => {
+    setShow(true);
+  }, []);
 
-  const handleShowAlert = () => {
-    setShowAlert(true);
-    setTimeout(() => {
-      setShowAlert(false);
-    }, 2000);
-  };
+  const handleClose = useCallback(() => {
+    setShow(false);
+  }, []);
 
-  useEffect(() => {
-    handleClose();
+  const slicedDemands = useMemo(() => {
+    const indexOfLastDemand = currentPage * demandsPerPage;
+    const indexOfFirstDemand = indexOfLastDemand - demandsPerPage;
+    return demands.slice(indexOfFirstDemand, indexOfLastDemand);
+  }, [demands, currentPage, demandsPerPage]);
 
-    return () => {
-      handleShowAlert();
-    };
-  }, [demands]);
+  const totalPagesNum = useMemo(() => Math.ceil(demands.length / demandsPerPage), [demands, demandsPerPage]);
 
-  const indexOfLastDemand = currentPage * demandsPerPage;
-  const indexOfFirstDemand = indexOfLastDemand - demandsPerPage;
-  
+  const DemandComponentMemoized = useMemo(() => React.memo(DemandComponent), []);
 
-  
-  demands.slice(indexOfFirstDemand, indexOfLastDemand);
- 
-
-  const totalPagesNum = Math.ceil(demands.length / demandsPerPage);
+  const demandItems = useMemo(
+    () =>
+      slicedDemands.map((demand) => (
+        <tr key={demand.id}>
+          <DemandComponentMemoized demand={demand} />
+        </tr>
+      )),
+    [slicedDemands, DemandComponentMemoized]
+  );
 
   return (
     <>
@@ -56,10 +55,6 @@ const DemandsList: React.FC = () => {
         </div>
       </div>
 
-      <Alert show={showAlert} variant="success">
-        Demand List Updated Successfully!
-      </Alert>
-
       <table className="table table-striped table-hover">
         <thead>
           <tr>
@@ -75,19 +70,13 @@ const DemandsList: React.FC = () => {
             <th>End Date</th>
           </tr>
         </thead>
-        <tbody>
-          {demands.map(demand => (
-            <tr key={demand.id}>
-              <Demand demand={demand} />
-            </tr>
-          ))}
-        </tbody>
+        <tbody>{demandItems}</tbody>
       </table>
 
       <Pagination
         pages={totalPagesNum}
         setCurrentPage={setCurrentPage}
-        currentDemands={demands}
+        currentDemands={slicedDemands}
         demands={demands}
       />
 
