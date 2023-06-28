@@ -5,7 +5,7 @@ FROM node:14
 WORKDIR /app
 
 # Copy package.json and yarn.lock from two folders up
-COPY ../../package.json ../../yarn.lock ./
+COPY package.json yarn.lock ./
 
 # Install dependencies
 RUN yarn install

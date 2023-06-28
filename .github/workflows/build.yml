@@ -50,7 +50,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./build/Dockerfile
+          file: Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           labels: ${{ steps.meta.outputs.labels }}
