@@ -7,15 +7,15 @@ on:
   
 
 env:
-  IMAGE_NAMESPACE: "tractusx"
-  IMAGE_NAME: "demand-capacity-mgmt-frontend"
- 
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      packages: write
 
     steps:
       - name: Checkout repository
@@ -32,9 +32,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ${{ env.IMAGE_NAMESPACE }}/${{ env.IMAGE_NAME }}
-          # Automatically prepare image tags; See action docs for more examples. 
-          # semver patter will generate tags like these for example :1 :1.2 :1.2.3
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -42,21 +40,19 @@ jobs:
             type=semver,pattern={{major}}
             type=semver,pattern={{major}}.{{minor}}
 
-      - name: DockerHub login
+      - name: Login to GitHub Container Registry
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@v2
+        uses: docker/login-action@v1
         with:
-          # Use existing DockerHub credentials present as secrets
-          username: ${{ secrets.DOCKER_HUB_USER }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
-
-      
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: .conf/Dockerfile.prebuilt
+          file: Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           labels: ${{ steps.meta.outputs.labels }}
